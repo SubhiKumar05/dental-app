@@ -1,9 +1,11 @@
-import { connectDB } from "../lib/db.js";
-import User from "../models/User.js";
-import bcrypt from "bcryptjs";
+const { connectDB } = require("../lib/db.js");
+const User = require("../models/User.js");
+const bcrypt = require("bcryptjs");
 
-export default async function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
+module.exports = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).json({ message: "Method not allowed" });
+  }
 
   await connectDB();
 
@@ -16,5 +18,5 @@ export default async function handler(req, res) {
 
   await User.create({ name, email, password: hashed });
 
-  res.status(201).json({ message: "User registered successfully" });
-}
+  return res.status(201).json({ message: "User registered successfully" });
+};
